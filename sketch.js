@@ -14,6 +14,16 @@ function setup() {
     r.SetTargetFPS(FPS);
 }
 
+function isOverlap(rangeStart1, rangeEnd1, rangeStart2, rangeEnd2) {
+    if (rangeEnd1 >= rangeStart2 && rangeEnd2 >= rangeStart1) {
+        return true;
+    }
+    if (rangeStart1 >= rangeEnd2 && rangeStart2 >= rangeEnd1) {
+        return true;
+    }
+    return false;
+}
+
 let lToR = true;
 
 function update() {
@@ -32,20 +42,22 @@ const detectorW = 20;
 function drawDetector() {
     const detectorY = 0;
     const detectorH = HEIGHT;
-    r.DrawRectangle(detectorX, detectorY, detectorW, detectorH, r.RED);
+    const detectorColor = isOverlap(blueRangeX, blueRangeX + blueRangeW, detectorX, detectorX + detectorW) ? r.RED : r.WHITE;
+    r.DrawRectangle(detectorX, detectorY, detectorW, detectorH, detectorColor);
 }
 
+const blueRangeX = 100;
+const blueRangeW = 50;
+
 function drawBlueRange() {
-    const blueRangeX = 100;
     const blueRangeY = 0;
-    const blueRangeW = 50;
     const blueRangeH = HEIGHT;
     r.DrawRectangle(blueRangeX, blueRangeY, blueRangeW, blueRangeH, r.SKYBLUE);
 }
 
 function draw() {
     r.BeginDrawing();
-    r.ClearBackground(r.WHITE);
+    r.ClearBackground(r.BLACK);
 
     drawBlueRange();
     drawDetector();

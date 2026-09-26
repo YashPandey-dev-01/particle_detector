@@ -1,16 +1,16 @@
-const l = require("./logic");
+const s = require("./sketch");
 
 function loop() {
-    while (l.running()) {
-        l.update();
-        l.draw();
+    while (s.running()) {
+        s.update();
+        s.draw();
     }
 }
 
 function main() {
-    l.setup();
+    s.setup();
     loop();
-    l.teardown();
+    s.teardown();
 }
 
 main();
