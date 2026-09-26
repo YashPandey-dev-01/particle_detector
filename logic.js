@@ -17,25 +17,39 @@ function setup() {
 let lToR = true;
 
 function update() {
-    if (rangeX === 0) {
+    if (detectorX === 0) {
         lToR = true;
     }
-    if (rangeX === WIDTH - rangeW) {
+    if (detectorX === WIDTH - detectorW) {
         lToR = false;
     }
-    rangeX = lToR ? rangeX + 1 : rangeX - 1;
+    detectorX = lToR ? detectorX + 1 : detectorX - 1;
 }
 
-let rangeX = 0;
-const rangeW = 20;
+let detectorX = 0;
+const detectorW = 20;
+
+function drawDetector() {
+    const detectorY = 0;
+    const detectorH = HEIGHT;
+    r.DrawRectangle(detectorX, detectorY, detectorW, detectorH, r.RED);
+}
+
+function drawBlueRange() {
+    const blueRangeX = 100;
+    const blueRangeY = 0;
+    const blueRangeW = 50;
+    const blueRangeH = HEIGHT;
+    r.DrawRectangle(blueRangeX, blueRangeY, blueRangeW, blueRangeH, r.SKYBLUE);
+}
 
 function draw() {
-    const rangeY = 0;
-    const rangeH = HEIGHT;
-
     r.BeginDrawing();
     r.ClearBackground(r.WHITE);
-    r.DrawRectangle(rangeX, rangeY, rangeW, rangeH, r.RED);
+
+    drawBlueRange();
+    drawDetector();
+
     r.EndDrawing();
 }
 
