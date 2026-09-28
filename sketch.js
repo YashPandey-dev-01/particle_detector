@@ -1,14 +1,14 @@
 const r = require("raylib");
 
-const d = require("./detectorInputs/detectorFunctions.js");
+const d = require("./detector/detectorFunctions.js");
 
-const p1 = require("./particleInputs/verticalParticle1.js");
-const p2 = require("./particleInputs/verticalParticle2.js");
-const p3 = require("./particleInputs/horizontalParticle.js");
+const p1 = require("./particle/verticalParticle1.js");
+const p2 = require("./particle/verticalParticle2.js");
+const p3 = require("./particle/horizontalParticle.js");
 
-const d1 = require("./detectorInputs/verticalDetector1.js");
-const d2 = require("./detectorInputs/verticalDetector2.js");
-const d3 = require("./detectorInputs/horizontalDetector.js");
+const d1 = require("./detector/verticalDetector1.js");
+const d2 = require("./detector/verticalDetector2.js");
+const d3 = require("./detector/horizontalDetector.js");
 
 function running() {
   return !r.WindowShouldClose();
