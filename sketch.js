@@ -1,4 +1,10 @@
 const r = require("raylib");
+const p1 = require("./particleInputs/verticalParticle1.js");
+const p2 = require("./particleInputs/verticalParticle2.js");
+const p3 = require("./particleInputs/horizontalParticle.js");
+const d1 = require("./detectorInputs/verticalDetector1.js");
+const d2 = require("./detectorInputs/verticalDetector2.js");
+const d3 = require("./detectorInputs/horizontalDetector.js");
 
 function running() {
     return !r.WindowShouldClose();
@@ -8,41 +14,32 @@ const HEIGHT = 1045;
 const WIDTH = 1718;
 
 function setup() {
+    r.SetTraceLogLevel(r.LOG_NONE);
     const FPS = 80;
 
     r.InitWindow(WIDTH, HEIGHT, "Particle_detector");
     r.SetTargetFPS(FPS);
-    r.SetTraceLogLevel(r.LOG_NONE);
 }
 
 function isOverlap(rangeStart1, rangeEnd1, rangeStart2, rangeEnd2) {
-    if (rangeEnd1 >= rangeStart2 && rangeEnd2 >= rangeStart1) {
-        return true;
-    }
-    return false;
+    return (rangeEnd1 >= rangeStart2 && rangeEnd2 >= rangeStart1) ? true : false;
 }
 
-const verParticle1X = 100;
-const verParticle1Width = 50;
-const verParticle2X = 1000;
-const verParticle2Width = 200;
-const horzParticleY = 567;
-const horzParticleHeight = 150;
 const VERTICAL = "vertical";
 const HORIZONTAL = "horizontal"
 
 
 function detectorColor(dynamicAxis, size, detectorType) {
     if (detectorType === VERTICAL) {
-        if (isOverlap(dynamicAxis, dynamicAxis + size, verParticle1X, verParticle1X + verParticle1Width)) {
+        if (isOverlap(dynamicAxis, dynamicAxis + size, p1.startX, p1.startX + p1.width)) {
             return r.RED;
-        } else if (isOverlap(dynamicAxis, dynamicAxis + size, verParticle2X, verParticle2X + verParticle2Width)) {
+        } else if (isOverlap(dynamicAxis, dynamicAxis + size, p2.startX, p2.startX + p2.width)) {
             return r.RED;
         }
     }
 
     if (detectorType === HORIZONTAL) {
-        if (isOverlap(dynamicAxis, dynamicAxis + size, horzParticleY, horzParticleY + horzParticleHeight)) {
+        if (isOverlap(dynamicAxis, dynamicAxis + size, p3.startY, p3.startY + p3.height)) {
             return r.RED;
         }
     }
@@ -57,78 +54,53 @@ function drawParticle(verParticleX, verParticleY, verParticleW, verParticleH) {
     r.DrawRectangle(verParticleX, verParticleY, verParticleW, verParticleH, r.SKYBLUE);
 }
 
-const verDetector1Width = 20;
-const verDetector2Width = 20;
-const horzDetectorHeight = 20;
-
-let verDetector1X = 0;
-let verDetector2X = WIDTH / 2;
-let horzDetectorY = 0;
 let tToB = true; //for top to bottom detector
 let ltoR1 = true; //for left side detector
 let ltoR2 = true; //for right side detector
 
 function update() {
-    const verDetector1Speed = 1; // pixel per frame
-    const verDetector2Speed = 3; // pixel per frame
-    const horzDetectorSpeed = 2; // pixel per frame
+
 
     //for left side detector
-    if (verDetector1X === 0) {
+    if (d1.startX === 0) {
         ltoR1 = true;
     }
-    if (verDetector1X >= WIDTH / 2 - verDetector1Width) {
+    if (d1.startX >= WIDTH / 2 - d1.width) {
         ltoR1 = false;
     }
-    verDetector1X = ltoR1 ? verDetector1X + verDetector1Speed : verDetector1X - verDetector1Speed;
+    d1.startX = ltoR1 ? d1.startX + d1.velocity : d1.startX - d1.velocity;
 
     //for right side detector
-    if (verDetector2X === WIDTH / 2) {
+    if (d2.startX === WIDTH / 2) {
         ltoR2 = true;
     }
-    if (verDetector2X >= WIDTH - verDetector1Width) {
+    if (d2.startX >= WIDTH - d1.width) {
         ltoR2 = false;
     }
-    verDetector2X = ltoR2 ? verDetector2X + verDetector2Speed : verDetector2X - verDetector2Speed;
+    d2.startX = ltoR2 ? d2.startX + d2.velocity : d2.startX - d2.velocity;
 
     //for top to bottom detector
-    if (horzDetectorY === 0) {
+    if (d3.startY === 0) {
         tToB = true;
     }
-    if (horzDetectorY >= HEIGHT - horzDetectorHeight) {
+    if (d3.startY >= HEIGHT - d3.height) {
         tToB = false;
     }
-    horzDetectorY = tToB ? horzDetectorY + horzDetectorSpeed : horzDetectorY - horzDetectorSpeed;
+    d3.startY = tToB ? d3.startY + d3.velocity : d3.startY - d3.velocity;
 }
 
 function draw() {
     r.BeginDrawing();
     r.ClearBackground(r.BLACK);
 
-    const verParticle1Y = 0;
-    const verParticle2Height = HEIGHT;
-    const verParticle2Y = 0;
-    const verParticle1Height = HEIGHT;
 
-    const verDetector1Y = 0;
-    const verDetector1Height = HEIGHT;
-    const verDetector2Y = 0;
-    const verDetector2Height = HEIGHT;
+    drawParticle(p1.startX, p1.startY, p1.width, p1.height);
+    drawParticle(p2.startX, p2.startY, p2.width, p2.height);
+    drawParticle(p3.startX, p3.startY, p3.width, p3.height);
+    drawDetector(d1.startX, d1.startY, d1.width, d1.height, detectorColor(d1.startX, d1.width, "vertical"));
+    drawDetector(d2.startX, d2.startY, d2.width, d2.height, detectorColor(d2.startX, d2.width, "vertical"));
 
-    const horzParticleX = 0;
-    const horzParticleWidth = WIDTH;
-
-    const horzDetectorX = 0;
-    const horzDetectorWidth = WIDTH;
-
-
-
-    drawParticle(verParticle1X, verParticle1Y, verParticle1Width, verParticle1Height);
-    drawParticle(verParticle2X, verParticle2Y, verParticle2Width, verParticle2Height);
-    drawParticle(horzParticleX, horzParticleY, horzParticleWidth, horzParticleHeight);
-    drawDetector(verDetector1X, verDetector1Y, verDetector1Width, verDetector1Height, detectorColor(verDetector1X, verDetector1Width, "vertical"));
-    drawDetector(verDetector2X, verDetector2Y, verDetector2Width, verDetector2Height, detectorColor(verDetector2X, verDetector2Width, "vertical"));
-    drawDetector(horzDetectorX, horzDetectorY, horzDetectorWidth, horzDetectorHeight, detectorColor(horzDetectorY, horzDetectorHeight, "horizontal"));
+    drawDetector(d3.startX, d3.startY, d3.width, d3.height, detectorColor(d3.startY, d3.height, "horizontal"));
     r.EndDrawing();
 }
 
@@ -143,3 +115,4 @@ module.exports = {
     draw,
     teardown,
 };
+
