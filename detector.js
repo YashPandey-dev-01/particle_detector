@@ -32,6 +32,25 @@ function detectorVelocity(velocity, start, lower, upper) {
   return isDetectorOutOfBound(start, lower, upper) ? -velocity : velocity;
 }
 
+function update(d, type) {
+  const dynamicAxis = type === "vertical" ? "startX" : "startY";
+  d.velocity = detectorVelocity(d.velocity, d[dynamicAxis], d.lowerBound, d.upperBound);
+  d[dynamicAxis] = d[dynamicAxis] + d.velocity;
+  return d;
+}
+
+function draw(d) {
+  drawRange(d.startX, d.startY, d.width, d.height, d.color);
+  return d;
+}
+
+function createDetector(lowerBound, upperBound, width, height, startX, startY, velocity) {
+  const color = r.WHITE;
+  return {
+    lowerBound, upperBound, width, height, startX, startY, velocity, color
+  };
+}
+
 module.exports = {
   isOverlap,
   particleDetected,
@@ -39,4 +58,7 @@ module.exports = {
   isDetectorOutOfBound,
   detectorVelocity,
   detectorColor,
+  createDetector,
+  draw,
+  update
 };

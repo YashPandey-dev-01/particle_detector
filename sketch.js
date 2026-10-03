@@ -1,14 +1,14 @@
 const r = require("raylib");
 
-const d = require("./detector/detectorFunctions.js");
+const d = require("./detector.js");
 
 const p1 = require("./particle/verticalParticle1.js");
 const p2 = require("./particle/verticalParticle2.js");
 const p3 = require("./particle/horizontalParticle.js");
 
-const d1 = require("./detector/verticalDetector1.js");
-const d2 = require("./detector/verticalDetector2.js");
-const d3 = require("./detector/horizontalDetector.js");
+let d1;
+let d2;
+let d3;
 
 function running() {
   return !r.WindowShouldClose();
@@ -20,42 +20,17 @@ function setup(HEIGHT, WIDTH, TITLE, FPS) {
   r.InitWindow(WIDTH, HEIGHT, TITLE);
   r.SetTargetFPS(FPS);
 
-  d1.upperBound = WIDTH / 2 - d1.width;
-  d1.height = HEIGHT;
 
-  d2.upperBound = WIDTH - d2.width;
-  d2.lowerBound = WIDTH / 2;
-  d2.height = HEIGHT;
-  d2.startX = WIDTH / 2;
 
-  d3.width = WIDTH;
-  d3.upperBound = HEIGHT - d3.height;
+  d1 = d.createDetector(0, WIDTH / 2 - 20, 20, HEIGHT, 100, 0, 3);
+  d2 = d.createDetector(WIDTH / 2, WIDTH - 20, 20, HEIGHT, WIDTH / 2, 0, 4);
+  d3 = d.createDetector(0, HEIGHT - 20, WIDTH, 20, 0, 0, 3);
 }
 
 function update() {
-  d1.velocity = d.detectorVelocity(
-    d1.velocity,
-    d1.startX,
-    d1.lowerBound,
-    d1.upperBound,
-  );
-  d1.startX = d1.startX + d1.velocity;
-
-  d2.velocity = d.detectorVelocity(
-    d2.velocity,
-    d2.startX,
-    d2.lowerBound,
-    d2.upperBound,
-  );
-  d2.startX = d2.startX + d2.velocity;
-
-  d3.velocity = d.detectorVelocity(
-    d3.velocity,
-    d3.startY,
-    d3.lowerBound,
-    d3.upperBound,
-  );
-  d3.startY = d3.startY + d3.velocity;
+  d1 = d.update(d1, "vertical");
+  d2 = d.update(d2, "vertical");
+  d3 = d.update(d3, "horizontal");
 }
 
 function draw() {
@@ -86,9 +61,9 @@ function draw() {
 
   d3.color = d.detectorColor(d3.startY, d3.height, p3.startY, p3.height);
 
-  d.drawRange(d1.startX, d1.startY, d1.width, d1.height, d1.color);
-  d.drawRange(d2.startX, d2.startY, d2.width, d2.height, d2.color);
-  d.drawRange(d3.startX, d3.startY, d3.width, d3.height, d3.color);
+  d1 = d.draw(d1);
+  d2 = d.draw(d2);
+  d3 = d.draw(d3);
 
   r.EndDrawing();
 }
