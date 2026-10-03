@@ -1,17 +1,11 @@
 const r = require("raylib");
 const rg = require("./range.js")
 
-function particleDetected(dStart, dsize, p1Start, p1size, p2Start, p2size) {
-  const p1End = p1Start + p1size;
-  const p2End = p2Start + p2size;
-  const dEnd = dStart + dsize;
-  return rg.isOverlap(p1Start, p1End, dStart, dEnd) || rg.isOverlap(p2Start, p2End, dStart, dEnd);
-}
-
-function detectorColor(dStart, dsize, p1Start, p1size, p2Start, p2size) {
-  return particleDetected(dStart, dsize, p1Start, p1size, p2Start, p2size)
-    ? r.RED
-    : r.WHITE;
+function particleDetected(d, p1, p2) {
+  const p1End = p1.x + p1.width;
+  const p2End = p2.x + p2.width;
+  const dEnd = d.x + d.width;
+  return rg.isOverlap(p1.x, p1End, d.x, dEnd) || rg.isOverlap(p2.x, p2End, d.x, dEnd);
 }
 
 function isDetectorOutOfBound(start, lower, upper) {
@@ -23,28 +17,28 @@ function detectorVelocity(velocity, start, lower, upper) {
 }
 
 function updateH(d, p1) {
-  d.color = detectorColor(d.y, d.height, p1.y, p1.height);
+  d.hasDetected = rg.isOverlap(d.y, d.y + d.height, p1.y, p1.y + p1.height);
   d.velocity = detectorVelocity(d.velocity, d.y, d.lowerBound, d.upperBound);
   d.y = d.y + d.velocity;
   return d;
 }
 
 function updateV(d, p1, p2) {
-  d.color = detectorColor(d.x, d.width, p1.x, p1.width, p2.x, p2.width);
+  d.hasDetected = particleDetected(d, p1, p2);
   d.velocity = detectorVelocity(d.velocity, d.x, d.lowerBound, d.upperBound);
   d.x = d.x + d.velocity;
   return d;
 }
 
 function draw(d) {
-  rg.drawRange(d.x, d.y, d.width, d.height, d.color);
+  const color = d.hasDetected ? r.ColorAlpha(r.RED, 0.7) : r.WHITE
+  rg.drawRange(d.x, d.y, d.width, d.height, color);
   return d;
 }
 
-function createDetector(lowerBound, upperBound, width, height, x, y, velocity) {
-  const color = r.WHITE;
+function createDetector(lowerBound, upperBound, width, height, x, y, velocity, hasDetected) {
   return {
-    lowerBound, upperBound, width, height, x, y, velocity, color
+    lowerBound, upperBound, width, height, x, y, velocity, hasDetected
   };
 }
 

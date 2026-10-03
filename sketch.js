@@ -13,9 +13,9 @@ function setup(HEIGHT, WIDTH, TITLE, FPS) {
   r.InitWindow(WIDTH, HEIGHT, TITLE);
   r.SetTargetFPS(FPS);
 
-  world.d1 = d.createDetector(0, WIDTH / 2 - 20, 20, HEIGHT, 100, 0, 3);
-  world.d2 = d.createDetector(WIDTH / 2, WIDTH - 20, 20, HEIGHT, WIDTH / 2, 0, 4);
-  world.d3 = d.createDetector(0, HEIGHT - 20, WIDTH, 20, 0, 0, 3);
+  world.d1 = d.createDetector(0, WIDTH / 2 - 20, 20, HEIGHT, 100, 0, 3, false);
+  world.d2 = d.createDetector(WIDTH / 2, WIDTH - 20, 20, HEIGHT, WIDTH / 2, 0, 4, false);
+  world.d3 = d.createDetector(0, HEIGHT - 20, WIDTH, 20, 0, 0, 3, false);
 
   world.p1 = p.createParticle(100, 0, 50, HEIGHT);
   world.p2 = p.createParticle(1000, 0, 200, HEIGHT);
