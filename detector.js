@@ -1,15 +1,13 @@
 const r = require("raylib");
+const r = require("./range.js")
 
-function isOverlap(start1, end1, start2, end2) {
-  return end1 >= start2 && end2 >= start1 ? true : false;
-}
 
 function particleDetected(dStart, dsize, p1Start, p1size, p2Start, p2size) {
   const p1End = p1Start + p1size;
   const p2End = p2Start + p2size;
   const dEnd = dStart + dsize;
-  return isOverlap(p1Start, p1End, dStart, dEnd) ||
-    isOverlap((p2Start, p2End, dStart, dEnd))
+  return r.isOverlap(p1Start, p1End, dStart, dEnd) ||
+    r.isOverlap((p2Start, p2End, dStart, dEnd))
     ? true
     : false;
 }
@@ -20,9 +18,6 @@ function detectorColor(dStart, dsize, p1Start, p1size, p2Start, p2size) {
     : r.WHITE;
 }
 
-function drawRange(startX, startY, width, height, color) {
-  r.DrawRectangle(startX, startY, width, height, color);
-}
 
 function isDetectorOutOfBound(start, lower, upper) {
   return start < lower || start > upper;
@@ -40,7 +35,7 @@ function update(d, type) {
 }
 
 function draw(d) {
-  drawRange(d.startX, d.startY, d.width, d.height, d.color);
+  r.drawRange(d.startX, d.startY, d.width, d.height, d.color);
   return d;
 }
 
@@ -52,13 +47,6 @@ function createDetector(lowerBound, upperBound, width, height, startX, startY, v
 }
 
 module.exports = {
-  isOverlap,
-  particleDetected,
-  drawRange,
-  isDetectorOutOfBound,
-  detectorVelocity,
-  detectorColor,
-  createDetector,
   draw,
   update
 };
